@@ -3,33 +3,24 @@ package org.example;
 import javax.sound.midi.*;
 import javax.swing.*;
 
-public class MiniMusicPlayer implements ControllerEventListener{
+public class BeatBoxApp implements ControllerEventListener{
 
-    static JFrame frame = new JFrame("MiniMusicPlayer");
-    static MyDrawPanel drawPanel;
+    //BeatBoxGui beatBoxGui;
 
     public static void main(String[] args) {
-        MiniMusicPlayer mp = new MiniMusicPlayer();
-        mp.go();
+        BeatBoxApp mp = new BeatBoxApp();
+        BeatBoxGui beatBoxGui = new BeatBoxGui();
+        beatBoxGui.builGui();
     }
 
-    public void setUpGui(){
-        drawPanel = new MyDrawPanel();
-        frame.setContentPane(drawPanel);
-        frame.setBounds(30, 30, 300, 300);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
 
     public void go() {
-
-        this.setUpGui();
 
         try{
             Sequencer sequencer = MidiSystem.getSequencer();
             sequencer.open();
             // MIDIEvent to listen to
-            sequencer.addControllerEventListener(drawPanel, new int[] {127});
+            //sequencer.addControllerEventListener(new int[] {127});
 
             Sequence seq = new Sequence(Sequence.PPQ, 4);
             Track track = seq.createTrack();
