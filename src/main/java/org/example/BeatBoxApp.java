@@ -1,60 +1,76 @@
 package org.example;
 
 import javax.sound.midi.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class BeatBoxApp implements ControllerEventListener{
+public class BeatBoxApp{
 
-    //BeatBoxGui beatBoxGui;
+    BeatBoxGui beatBoxGui;
+    MidiBeatBox midiBeatBox;
 
     public static void main(String[] args) {
-        BeatBoxApp mp = new BeatBoxApp();
-        BeatBoxGui beatBoxGui = new BeatBoxGui();
-        beatBoxGui.builGui();
+        BeatBoxApp bba = new BeatBoxApp();
     }
 
+    public BeatBoxApp() {
+        beatBoxGui = new BeatBoxGui();
+        midiBeatBox = new MidiBeatBox();
 
-    public void go() {
+        ActionListener startAC = new StartButtonListener();
+        ActionListener stopAC = new StopButtonListener();
+        ActionListener upTempoAC = new UpTempoButtonListener();
+        ActionListener downTempoAC = new DownTempoButtonListener();
+        beatBoxGui.builGui(startAC, stopAC, upTempoAC, downTempoAC);
+    }
 
-        try{
-            Sequencer sequencer = MidiSystem.getSequencer();
-            sequencer.open();
-            // MIDIEvent to listen to
-            //sequencer.addControllerEventListener(new int[] {127});
+    public void buildTrackAndStart(){
+        int[] trackList = new int[16];
+        Track track = midiBeatBox.getNewTrack();
 
-            Sequence seq = new Sequence(Sequence.PPQ, 4);
-            Track track = seq.createTrack();
+        for (int i = 0; i < trackList.length; i++){
+            int key = beatBoxGui.getInstrument(i);
 
-            int r = 0;
-            for (int i = 5; i < 60; i+=4) {
-
-                r = (int) ((Math.random() * 50)+1);
-                track.add(makeEvent(144, 1, r, 100, i));
-                track.add(makeEvent(176, 1, 127, 0, i));
-                track.add(makeEvent(128, 1, r, 100, i+2));
+            for (int j = 0; j < beatBoxGui.instruments.length; j++){
+                if (beatBoxGui.isCheckBoxSelected(j + 16*i)){
+                    trackList[j] = key;
+                } else {
+                    trackList[j] = 0;
+                }
             }
 
-            sequencer.setSequence(seq);
-            sequencer.setTempoInBPM(220);
-            sequencer.start();
-        } catch (Exception e){e.printStackTrace();}
+            midiBeatBox.makeTracks(trackList);
+        }
+
+        midiBeatBox.addEvent(192, 9, 1, 0, 15);
+        midiBeatBox.play();
     }
 
-    @Override
-    public void controlChange(ShortMessage event) {
-        System.out.println(event);
+    public class StartButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            buildTrackAndStart();
+        }
     }
 
-    public static MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
-        MidiEvent event = null;
-        try {
-            ShortMessage msg = new ShortMessage();
-            msg.setMessage(comd, chan, one, two);
-            event = new MidiEvent(msg, tick);
-
-        } catch (InvalidMidiDataException e) {}
-
-        return event;
+    public class StopButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            midiBeatBox.stop();
+        }
     }
 
+    public class UpTempoButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            midiBeatBox.upTempo();
+        }
+    }
+
+    public class DownTempoButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            midiBeatBox.downTempo();
+        }
+    }
 }

@@ -1,10 +1,7 @@
 package org.example;
 
-import javax.sound.midi.ControllerEventListener;
-import javax.sound.midi.ShortMessage;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
@@ -21,7 +18,8 @@ public class BeatBoxGui {
             "Open Hi Conga"};
     int[] instruments = {35,42,46,38,49,39,50,60,70,72,64,56,58,47,67,63};
 
-    public void builGui(){
+
+    public void builGui(ActionListener startAC, ActionListener stopAC, ActionListener upTempoAC, ActionListener downTempoAC) {
         frame = new JFrame("BeatBox");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         BorderLayout layout = new BorderLayout();
@@ -32,19 +30,19 @@ public class BeatBoxGui {
         Box buttonBox = new Box(BoxLayout.Y_AXIS);
 
         JButton start = new JButton("Start");
-        start.addActionListener(new StartButtonListener());
+        start.addActionListener(startAC);
         buttonBox.add(start);
 
         JButton stop = new JButton("Stop");
-        stop.addActionListener(new StopButtonListener());
+        stop.addActionListener(stopAC);
         buttonBox.add(stop);
 
         JButton upTempo = new JButton("Tempo Up");
-        upTempo.addActionListener(new UpTempoButtonListener());
+        upTempo.addActionListener(upTempoAC);
         buttonBox.add(upTempo);
 
         JButton downTempo = new JButton("Tempo Down");
-        downTempo.addActionListener(new DownTempoButtonListener());
+        downTempo.addActionListener(downTempoAC);
         buttonBox.add(downTempo);
 
         Box nameBox = new Box(BoxLayout.Y_AXIS);
@@ -75,31 +73,12 @@ public class BeatBoxGui {
         frame.setVisible(true);
     }
 
-    public class StartButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-        }
+    public int getInstrument(int idx){
+        return instruments[idx];
     }
 
-    public class StopButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-        }
+    public boolean isCheckBoxSelected(int idx){
+        return checkBoxesList.get(idx).isSelected();
     }
 
-    public class UpTempoButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-        }
-    }
-
-    public class DownTempoButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-        }
-    }
 }
