@@ -1,8 +1,8 @@
 package org.example;
 
-import javax.sound.midi.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 
 public class BeatBoxApp{
 
@@ -21,25 +21,16 @@ public class BeatBoxApp{
         ActionListener stopAC = new StopButtonListener();
         ActionListener upTempoAC = new UpTempoButtonListener();
         ActionListener downTempoAC = new DownTempoButtonListener();
-        beatBoxGui.builGui(startAC, stopAC, upTempoAC, downTempoAC);
+        ActionListener saveAC = new SaveButtonListener();
+        ActionListener loadAC = new LoadButtonListener();
+        beatBoxGui.builGui(startAC, stopAC, upTempoAC, downTempoAC, saveAC, loadAC);
     }
 
     public void buildTrackAndStart(){
-        int[] trackList = new int[16];
-        Track track = midiBeatBox.getNewTrack();
+        midiBeatBox.setNewTrack();
 
-        for (int i = 0; i < trackList.length; i++){
-            int key = beatBoxGui.getInstrument(i);
-
-            for (int j = 0; j < beatBoxGui.instruments.length; j++){
-                if (beatBoxGui.isCheckBoxSelected(j + 16*i)){
-                    trackList[j] = key;
-                } else {
-                    trackList[j] = 0;
-                }
-            }
-
-            midiBeatBox.makeTracks(trackList);
+        for (int[] instrumentSelection: beatBoxGui.getSelectedInstruments()){
+            midiBeatBox.makeTracks(instrumentSelection);
         }
 
         midiBeatBox.addEvent(192, 9, 1, 0, 15);
@@ -71,6 +62,38 @@ public class BeatBoxApp{
         @Override
         public void actionPerformed(ActionEvent e) {
             midiBeatBox.downTempo();
+        }
+    }
+
+    public class SaveButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int[][] selectedInstrument = beatBoxGui.getSelectedInstruments();
+
+            try{
+                FileOutputStream fileStream = new FileOutputStream(new File("song.ser"));
+                ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+                objectStream.writeObject(selectedInstrument);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public class LoadButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int[][] selectedInstrument = null;
+            try{
+                FileInputStream fileStream = new FileInputStream(new File("song.ser"));
+                ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+                selectedInstrument = (int[][]) objectStream.readObject();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            beatBoxGui.setSelectedInstruments(selectedInstrument);
+            midiBeatBox.stop();
         }
     }
 }
