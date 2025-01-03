@@ -19,7 +19,7 @@ public class MidiBeatBox {
         } catch (Exception e) {e.printStackTrace();}
     }
 
-    public Track getNewTrack() {
+    public Track setNewTrack() {
         sequence.deleteTrack(track);
         track = sequence.createTrack();
         return track;
