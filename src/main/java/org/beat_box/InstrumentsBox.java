@@ -1,4 +1,4 @@
-package org.example;
+package org.beat_box;
 
 import javax.swing.*;
 import java.io.Serializable;
@@ -68,6 +68,20 @@ public class InstrumentsBox implements Serializable {
 
                 checkBoxesList.get(i*totBeats+j).setSelected(selectedInstruments[i][j] != 0);
             }
+        }
+    }
+
+    // for debugging
+    public void printCurrentCheckBoxes() {
+        for (int[] instrument : this.getSelectedInstruments()) {
+            for (int i : instrument) {
+                if (i == 0) {
+                    System.out.print("0 ");
+                } else {
+                    System.out.print("1 ");
+                }
+            }
+            System.out.println();
         }
     }
 }

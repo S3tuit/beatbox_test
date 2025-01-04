@@ -1,4 +1,4 @@
-package org.example;
+package org.beat_box;
 
 import javax.sound.midi.*;
 

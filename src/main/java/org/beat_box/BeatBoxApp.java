@@ -1,4 +1,4 @@
-package org.example;
+package org.beat_box;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +8,7 @@ public class BeatBoxApp{
 
     BeatBoxGui beatBoxGui;
     MidiBeatBox midiBeatBox;
+    Chat chat;
 
     public static void main(String[] args) {
         BeatBoxApp bba = new BeatBoxApp();
@@ -23,7 +24,10 @@ public class BeatBoxApp{
         ActionListener downTempoAC = new DownTempoButtonListener();
         ActionListener saveAC = new SaveButtonListener();
         ActionListener loadAC = new LoadButtonListener();
-        beatBoxGui.builGui(startAC, stopAC, upTempoAC, downTempoAC, saveAC, loadAC);
+        ActionListener sendItAC = new SendItButtonListener();
+        beatBoxGui.buildGui(startAC, stopAC, upTempoAC, downTempoAC, saveAC, loadAC, sendItAC);
+        chat = new Chat(beatBoxGui.getOutgoingMsg(), beatBoxGui.getIncomingMsg());
+        chat.start();
     }
 
     public void buildTrackAndStart(){
@@ -62,6 +66,7 @@ public class BeatBoxApp{
         @Override
         public void actionPerformed(ActionEvent e) {
             midiBeatBox.downTempo();
+            //beatBoxGui.printCurrentCheckBoxes();
         }
     }
 
@@ -94,6 +99,14 @@ public class BeatBoxApp{
 
             beatBoxGui.setSelectedInstruments(selectedInstrument);
             midiBeatBox.stop();
+        }
+    }
+
+    public class SendItButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int[][] selectedInstrument = beatBoxGui.getSelectedInstruments();
+            chat.sendMsg(selectedInstrument);
         }
     }
 }
