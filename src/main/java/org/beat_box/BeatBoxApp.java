@@ -25,8 +25,9 @@ public class BeatBoxApp{
         ActionListener saveAC = new SaveButtonListener();
         ActionListener loadAC = new LoadButtonListener();
         ActionListener sendItAC = new SendItButtonListener();
+        ActionListener loadPatternAC = new LoadPatternButtonListener();
         beatBoxGui.buildGui(startAC, stopAC, upTempoAC, downTempoAC, saveAC, loadAC, sendItAC);
-        chat = new Chat(beatBoxGui.getOutgoingMsg(), beatBoxGui.getIncomingMsg());
+        chat = new Chat(beatBoxGui.getOutgoingMsg(), beatBoxGui.getIncomingMsgPanel(), loadPatternAC);
         chat.start();
     }
 
@@ -103,6 +104,14 @@ public class BeatBoxApp{
     }
 
     public class SendItButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int[][] selectedInstrument = beatBoxGui.getSelectedInstruments();
+            chat.sendMsg(selectedInstrument);
+        }
+    }
+
+    public class LoadPatternButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             int[][] selectedInstrument = beatBoxGui.getSelectedInstruments();

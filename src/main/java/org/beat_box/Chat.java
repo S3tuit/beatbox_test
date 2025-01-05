@@ -1,21 +1,24 @@
 package org.beat_box;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.Socket;
 
 public class Chat {
 
     JTextField outgoingMsg;
-    JTextArea incomingMsg;
+    JPanel incomingMsgPanel;
     ObjectOutputStream objOutStream;
     ObjectInputStream objInStream;
     Socket socket;
+    ActionListener loadPatterAC;
 
-    public Chat(JTextField outgoingMsg, JTextArea incomingMsg) {
+    public Chat(JTextField outgoingMsg, JPanel incomingMsgPanel, ActionListener loadPatterAC) {
         this.outgoingMsg = outgoingMsg;
-        this.incomingMsg = incomingMsg;
-
+        this.incomingMsgPanel = incomingMsgPanel;
+        this.loadPatterAC = loadPatterAC;
     }
 
     public void start() {
@@ -56,12 +59,23 @@ public class Chat {
 
         @Override
         public void run() {
-            ChatMessage chatMessage = null;
+            ChatMessage chatMessage;
             try{
                 while ((chatMessage = (ChatMessage) objInStream.readObject()) != null){
 
-                    System.out.println("Read: " + chatMessage.getMessage());
-                    incomingMsg.append(chatMessage.getMessage() + "\n");
+                    JPanel messagePanel = new JPanel(new BorderLayout(5,5));
+                    messagePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+                    JLabel messageLabel = new JLabel(chatMessage.getMessage());
+                    messagePanel.add(messageLabel, BorderLayout.CENTER);
+
+                    JButton loadPatternButton = new JButton("Load Pattern");
+                    loadPatternButton.addActionListener(loadPatterAC);
+                    messagePanel.add(loadPatternButton, BorderLayout.EAST);
+
+                    incomingMsgPanel.add(messagePanel, BorderLayout.CENTER);
+                    incomingMsgPanel.revalidate();
+                    incomingMsgPanel.repaint();
                 }
             } catch (Exception e) {
                 System.out.println("Error reading the message in the chat");
