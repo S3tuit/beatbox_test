@@ -10,7 +10,7 @@ public class BeatBoxGui {
     JPanel mainPanel;
     InstrumentsBox instrumentsBox;
     JTextField outgoingMsg;
-    JTextArea incomingMsg;
+    JPanel incomingMsgPanel;
 
 
     public void buildGui(ActionListener startAC, ActionListener stopAC, ActionListener upTempoAC,
@@ -95,11 +95,10 @@ public class BeatBoxGui {
         JPanel chatPanel = new JPanel(new BorderLayout(5, 5));
         chatPanel.setBorder(BorderFactory.createTitledBorder("Chat"));
 
-        incomingMsg = new JTextArea(10, 20);
-        incomingMsg.setLineWrap(true);
-        incomingMsg.setWrapStyleWord(true);
-        incomingMsg.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(incomingMsg);
+        incomingMsgPanel = new JPanel();
+        incomingMsgPanel.setLayout(new BoxLayout(incomingMsgPanel, BoxLayout.Y_AXIS));
+        JScrollPane scrollPane = new JScrollPane(incomingMsgPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         outgoingMsg = new JTextField();
         outgoingMsg.setBorder(BorderFactory.createTitledBorder("Message"));
@@ -129,8 +128,8 @@ public class BeatBoxGui {
         instrumentsBox.printCurrentCheckBoxes();
     }
 
-    public JTextArea getIncomingMsg() {
-        return incomingMsg;
+    public JPanel getIncomingMsgPanel(){
+        return incomingMsgPanel;
     }
 
     public JTextField getOutgoingMsg() {
