@@ -7,22 +7,20 @@ import java.util.ArrayList;
 public class InstrumentsBox implements Serializable {
 
     private transient ArrayList<JCheckBox> checkBoxesList;
-    private transient final String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat",
+    static final String[] INSTRUMENTS_NAME = {"Bass Drum", "Closed Hi-Hat",
             "Open Hi-Hat","Acoustic Snare", "Crash Cymbal", "Hand Clap",
             "High Tom", "Hi Bongo", "Maracas", "Whistle", "Low Conga",
             "Cowbell", "Vibraslap", "Low-mid Tom", "High Agogo",
             "Open Hi Conga"};
-    private transient final int[] instruments = {35,42,46,38,49,39,50,60,70,72,64,56,58,47,67,63};
-    private transient final int totBeats = 16;
-    int[][] selectedInstruments = new int[instruments.length][totBeats];
+    static final int[] INSTRUMENTS = {35,42,46,38,49,39,50,60,70,72,64,56,58,47,67,63};
+    static final int totBeats = 16;
+    int[][] selectedInstruments = new int[INSTRUMENTS.length][totBeats];
 
-    public InstrumentsBox() {
+
+    public void initializeCheckBoxes() {
         checkBoxesList = new ArrayList<>();
-        this.initializeCheckBoxes();
-    }
 
-    private void initializeCheckBoxes() {
-        for (int i = 0; i < instruments.length; i++) {
+        for (int i = 0; i < INSTRUMENTS.length; i++) {
             for (int j = 0; j < totBeats; j++) {
 
                 JCheckBox checkBox = new JCheckBox();
@@ -36,14 +34,11 @@ public class InstrumentsBox implements Serializable {
         return checkBoxesList;
     }
 
-    public String[] getInstrumentNames() {
-        return instrumentNames;
-    }
+    // updates the selectedInstruments based on the checked/unchecked boxes, then returns it
+    public int[][] syncInstrumentsWithGui(){
 
-    public int[][] getSelectedInstruments(){
-
-        for (int i = 0; i < instruments.length; i++) {
-            int instrumentKey = instruments[i];
+        for (int i = 0; i < INSTRUMENTS.length; i++) {
+            int instrumentKey = INSTRUMENTS[i];
 
             for (int j = 0; j < totBeats; j++) {
                 if (checkBoxesList.get(i*totBeats+j).isSelected()) {
@@ -57,13 +52,23 @@ public class InstrumentsBox implements Serializable {
         return selectedInstruments;
     }
 
-    public void setSelectedInstruments(int[][] selectedInstruments) {
-        this.selectedInstruments = selectedInstruments;
-        this.updateCheckBoxes();
+    public int[][] getSelectedInstruments() {
+        return selectedInstruments;
     }
 
+    public void setSelectedInstruments(int[][] selectedInstruments) {
+        this.selectedInstruments = selectedInstruments;
+
+        // if the checkBoxes are already initialized it updates them
+        if (checkBoxesList != null && !checkBoxesList.isEmpty()){
+            this.updateCheckBoxes();
+        }
+
+    }
+
+    // checks/unchecks the boxes based on the values inside selectedInstruments, 0 = unchecked
     public void updateCheckBoxes() {
-        for (int i = 0; i < instruments.length; i++) {
+        for (int i = 0; i < INSTRUMENTS.length; i++) {
             for (int j = 0; j < totBeats; j++) {
 
                 checkBoxesList.get(i*totBeats+j).setSelected(selectedInstruments[i][j] != 0);
@@ -73,7 +78,7 @@ public class InstrumentsBox implements Serializable {
 
     // for debugging
     public void printCurrentCheckBoxes() {
-        for (int[] instrument : this.getSelectedInstruments()) {
+        for (int[] instrument : this.selectedInstruments) {
             for (int i : instrument) {
                 if (i == 0) {
                     System.out.print("0 ");

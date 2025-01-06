@@ -6,14 +6,15 @@ import java.io.*;
 
 public class BeatBoxApp{
 
-    BeatBoxGui beatBoxGui;
-    MidiBeatBox midiBeatBox;
-    Chat chat;
+    private BeatBoxGui beatBoxGui;
+    private MidiBeatBox midiBeatBox;
+    private Chat chat;
 
     public static void main(String[] args) {
         BeatBoxApp bba = new BeatBoxApp();
     }
 
+    // creates the entities and start the app
     public BeatBoxApp() {
         beatBoxGui = new BeatBoxGui();
         midiBeatBox = new MidiBeatBox();
@@ -25,19 +26,20 @@ public class BeatBoxApp{
         ActionListener saveAC = new SaveButtonListener();
         ActionListener loadAC = new LoadButtonListener();
         ActionListener sendItAC = new SendItButtonListener();
-        ActionListener loadPatternAC = new LoadPatternButtonListener();
         beatBoxGui.buildGui(startAC, stopAC, upTempoAC, downTempoAC, saveAC, loadAC, sendItAC);
-        chat = new Chat(beatBoxGui.getOutgoingMsg(), beatBoxGui.getIncomingMsgPanel(), loadPatternAC);
+        chat = new Chat(beatBoxGui.getOutgoingMsg(), beatBoxGui.getIncomingMsgPanel(), beatBoxGui);
         chat.start();
     }
 
     public void buildTrackAndStart(){
         midiBeatBox.setNewTrack();
 
+        // for each instrument, add the beats to the track
         for (int[] instrumentSelection: beatBoxGui.getSelectedInstruments()){
             midiBeatBox.makeTracks(instrumentSelection);
         }
 
+        // Add a dummy event so the track will play until beat 16 (tick: 15)
         midiBeatBox.addEvent(192, 9, 1, 0, 15);
         midiBeatBox.play();
     }
@@ -67,13 +69,14 @@ public class BeatBoxApp{
         @Override
         public void actionPerformed(ActionEvent e) {
             midiBeatBox.downTempo();
-            //beatBoxGui.printCurrentCheckBoxes();
         }
     }
 
     public class SaveButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+
+            // gets the current instrument selected based on the GUI's checkboxes
             int[][] selectedInstrument = beatBoxGui.getSelectedInstruments();
 
             try{
@@ -98,20 +101,13 @@ public class BeatBoxApp{
                 ex.printStackTrace();
             }
 
+            // update the GUI
             beatBoxGui.setSelectedInstruments(selectedInstrument);
             midiBeatBox.stop();
         }
     }
 
     public class SendItButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int[][] selectedInstrument = beatBoxGui.getSelectedInstruments();
-            chat.sendMsg(selectedInstrument);
-        }
-    }
-
-    public class LoadPatternButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             int[][] selectedInstrument = beatBoxGui.getSelectedInstruments();

@@ -6,11 +6,11 @@ import java.awt.event.ActionListener;
 
 public class BeatBoxGui {
 
-    JFrame frame;
-    JPanel mainPanel;
-    InstrumentsBox instrumentsBox;
-    JTextField outgoingMsg;
-    JPanel incomingMsgPanel;
+    private JFrame frame;
+    private JPanel mainPanel;
+    private InstrumentsBox instrumentsBox;
+    private JTextField outgoingMsg;
+    private JPanel incomingMsgPanel;
 
 
     public void buildGui(ActionListener startAC, ActionListener stopAC, ActionListener upTempoAC,
@@ -22,11 +22,13 @@ public class BeatBoxGui {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {}
 
+        // Frame setup
         frame = new JFrame("BeatBox");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout(10, 10));
 
         instrumentsBox = new InstrumentsBox();
+        instrumentsBox.initializeCheckBoxes();
 
         // Instrument Panel - WEST
         JPanel instrumentsPanel = createInstrumentPanel();
@@ -45,7 +47,7 @@ public class BeatBoxGui {
         rightPanel.add(createChatPanel(), BorderLayout.CENTER);
         frame.add(rightPanel, BorderLayout.EAST);
 
-        // Frame settings
+        // more frame settings
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -55,7 +57,7 @@ public class BeatBoxGui {
         JPanel instrumentsPanel = new JPanel(new GridLayout(16, 2, 5, 5));
         instrumentsPanel.setBorder(BorderFactory.createTitledBorder("Instruments"));
 
-        String[] instrumentNames = instrumentsBox.getInstrumentNames();
+        String[] instrumentNames = InstrumentsBox.INSTRUMENTS_NAME;
 
         for (String instrumentName : instrumentNames) {
             JLabel instrumentLabel = new JLabel(instrumentName);
@@ -109,6 +111,7 @@ public class BeatBoxGui {
         return chatPanel;
     }
 
+    // helper method that returns buttons of the same size
     private JButton createButton(String text, ActionListener actionListener){
         JButton button = new JButton(text);
         button.addActionListener(actionListener);
@@ -116,8 +119,9 @@ public class BeatBoxGui {
         return button;
     }
 
+    // updates the selectedInstruments based on the checked boxes in the gui, then returns the selectedInstruments
     public int[][] getSelectedInstruments(){
-        return instrumentsBox.getSelectedInstruments();
+        return instrumentsBox.syncInstrumentsWithGui();
     }
 
     public void setSelectedInstruments(int[][] selectedInstruments){
