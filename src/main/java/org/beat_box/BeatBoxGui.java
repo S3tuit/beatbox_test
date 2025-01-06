@@ -6,11 +6,11 @@ import java.awt.event.ActionListener;
 
 public class BeatBoxGui {
 
-    JFrame frame;
-    JPanel mainPanel;
-    InstrumentsBox instrumentsBox;
-    JTextField outgoingMsg;
-    JPanel incomingMsgPanel;
+    private JFrame frame;
+    private JPanel mainPanel;
+    private InstrumentsBox instrumentsBox;
+    private JTextField outgoingMsg;
+    private JPanel incomingMsgPanel;
 
 
     public void buildGui(ActionListener startAC, ActionListener stopAC, ActionListener upTempoAC,
@@ -27,6 +27,7 @@ public class BeatBoxGui {
         frame.setLayout(new BorderLayout(10, 10));
 
         instrumentsBox = new InstrumentsBox();
+        instrumentsBox.initializeCheckBoxes();
 
         // Instrument Panel - WEST
         JPanel instrumentsPanel = createInstrumentPanel();
@@ -55,7 +56,7 @@ public class BeatBoxGui {
         JPanel instrumentsPanel = new JPanel(new GridLayout(16, 2, 5, 5));
         instrumentsPanel.setBorder(BorderFactory.createTitledBorder("Instruments"));
 
-        String[] instrumentNames = instrumentsBox.getInstrumentNames();
+        String[] instrumentNames = InstrumentsBox.INSTRUMENTS_NAME;
 
         for (String instrumentName : instrumentNames) {
             JLabel instrumentLabel = new JLabel(instrumentName);
@@ -117,7 +118,7 @@ public class BeatBoxGui {
     }
 
     public int[][] getSelectedInstruments(){
-        return instrumentsBox.getSelectedInstruments();
+        return instrumentsBox.syncInstrumentsWithGui();
     }
 
     public void setSelectedInstruments(int[][] selectedInstruments){

@@ -4,9 +4,9 @@ import javax.sound.midi.*;
 
 public class MidiBeatBox {
 
-    Sequencer sequencer;
-    Sequence sequence;
-    Track track;
+    private Sequencer sequencer;
+    private Sequence sequence;
+    private Track track;
 
     public MidiBeatBox() {
         try {

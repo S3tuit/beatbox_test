@@ -17,7 +17,8 @@ public class Server {
 
     public void go() {
         clientOutputStreams = new ArrayList<>();
-        try(ServerSocket serverSocket = new ServerSocket(4242)){
+        try{
+            ServerSocket serverSocket = new ServerSocket(4242);
 
             while(true){
                 Socket clientSocket = serverSocket.accept();
@@ -26,7 +27,7 @@ public class Server {
 
                 Thread tread = new Thread(new ClientHandler(clientSocket));
                 tread.start();
-                System.out.println("Client connected!");
+                System.out.println("Client connected! \nClients connected: " + clientOutputStreams.size());
             }
 
         } catch (IOException ex){
@@ -68,11 +69,13 @@ public class Server {
 
         @Override
         public void run() {
-            ChatMessage chatMessage = null;
+            ChatMessage chatMessage;
 
             try{
                 while ((chatMessage = (ChatMessage) objectIn.readObject()) != null){
-                    System.out.println("Read: " + chatMessage.getMessage());
+                    System.out.println();
+                    System.out.println("Server reads: ");
+                    chatMessage.printCurrentCheckBoxes();
                     tellEveryone(chatMessage);
 
                 }

@@ -6,9 +6,9 @@ import java.io.*;
 
 public class BeatBoxApp{
 
-    BeatBoxGui beatBoxGui;
-    MidiBeatBox midiBeatBox;
-    Chat chat;
+    private BeatBoxGui beatBoxGui;
+    private MidiBeatBox midiBeatBox;
+    private Chat chat;
 
     public static void main(String[] args) {
         BeatBoxApp bba = new BeatBoxApp();
@@ -25,9 +25,8 @@ public class BeatBoxApp{
         ActionListener saveAC = new SaveButtonListener();
         ActionListener loadAC = new LoadButtonListener();
         ActionListener sendItAC = new SendItButtonListener();
-        ActionListener loadPatternAC = new LoadPatternButtonListener();
         beatBoxGui.buildGui(startAC, stopAC, upTempoAC, downTempoAC, saveAC, loadAC, sendItAC);
-        chat = new Chat(beatBoxGui.getOutgoingMsg(), beatBoxGui.getIncomingMsgPanel(), loadPatternAC);
+        chat = new Chat(beatBoxGui.getOutgoingMsg(), beatBoxGui.getIncomingMsgPanel(), beatBoxGui);
         chat.start();
     }
 
@@ -104,14 +103,6 @@ public class BeatBoxApp{
     }
 
     public class SendItButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int[][] selectedInstrument = beatBoxGui.getSelectedInstruments();
-            chat.sendMsg(selectedInstrument);
-        }
-    }
-
-    public class LoadPatternButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             int[][] selectedInstrument = beatBoxGui.getSelectedInstruments();
