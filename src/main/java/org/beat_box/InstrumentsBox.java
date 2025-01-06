@@ -34,6 +34,7 @@ public class InstrumentsBox implements Serializable {
         return checkBoxesList;
     }
 
+    // updates the selectedInstruments based on the checked/unchecked boxes, then returns it
     public int[][] syncInstrumentsWithGui(){
 
         for (int i = 0; i < INSTRUMENTS.length; i++) {
@@ -58,12 +59,14 @@ public class InstrumentsBox implements Serializable {
     public void setSelectedInstruments(int[][] selectedInstruments) {
         this.selectedInstruments = selectedInstruments;
 
+        // if the checkBoxes are already initialized it updates them
         if (checkBoxesList != null && !checkBoxesList.isEmpty()){
             this.updateCheckBoxes();
         }
 
     }
 
+    // checks/unchecks the boxes based on the values inside selectedInstruments, 0 = unchecked
     public void updateCheckBoxes() {
         for (int i = 0; i < INSTRUMENTS.length; i++) {
             for (int j = 0; j < totBeats; j++) {

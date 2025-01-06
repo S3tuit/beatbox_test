@@ -33,6 +33,8 @@ public class MidiBeatBox {
         track.add(makeEvent(comd, chan, one, two, tick));
     }
 
+    // Add MidiEvent to the track based on a list int[]
+    // if the element is 0 it's skipped, else it adds the element value as an instrument
     public void makeTracks(int[] list) {
 
         for (int i = 0; i < list.length; i++) {
@@ -46,6 +48,7 @@ public class MidiBeatBox {
         }
     }
 
+    // helper method
     public static MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
         MidiEvent event = null;
         try {
@@ -58,6 +61,7 @@ public class MidiBeatBox {
         return event;
     }
 
+    // start the track and plays it until the user stops it
     public void play() {
         try{
             sequencer.setSequence(sequence);

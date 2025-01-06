@@ -14,6 +14,7 @@ public class BeatBoxApp{
         BeatBoxApp bba = new BeatBoxApp();
     }
 
+    // creates the entities and start the app
     public BeatBoxApp() {
         beatBoxGui = new BeatBoxGui();
         midiBeatBox = new MidiBeatBox();
@@ -33,10 +34,12 @@ public class BeatBoxApp{
     public void buildTrackAndStart(){
         midiBeatBox.setNewTrack();
 
+        // for each instrument, add the beats to the track
         for (int[] instrumentSelection: beatBoxGui.getSelectedInstruments()){
             midiBeatBox.makeTracks(instrumentSelection);
         }
 
+        // Add a dummy event so the track will play until beat 16 (tick: 15)
         midiBeatBox.addEvent(192, 9, 1, 0, 15);
         midiBeatBox.play();
     }
@@ -66,13 +69,14 @@ public class BeatBoxApp{
         @Override
         public void actionPerformed(ActionEvent e) {
             midiBeatBox.downTempo();
-            //beatBoxGui.printCurrentCheckBoxes();
         }
     }
 
     public class SaveButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+
+            // gets the current instrument selected based on the GUI's checkboxes
             int[][] selectedInstrument = beatBoxGui.getSelectedInstruments();
 
             try{
@@ -97,6 +101,7 @@ public class BeatBoxApp{
                 ex.printStackTrace();
             }
 
+            // update the GUI
             beatBoxGui.setSelectedInstruments(selectedInstrument);
             midiBeatBox.stop();
         }

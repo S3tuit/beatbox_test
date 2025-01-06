@@ -22,6 +22,7 @@ public class BeatBoxGui {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {}
 
+        // Frame setup
         frame = new JFrame("BeatBox");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout(10, 10));
@@ -46,7 +47,7 @@ public class BeatBoxGui {
         rightPanel.add(createChatPanel(), BorderLayout.CENTER);
         frame.add(rightPanel, BorderLayout.EAST);
 
-        // Frame settings
+        // more frame settings
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -110,6 +111,7 @@ public class BeatBoxGui {
         return chatPanel;
     }
 
+    // helper method that returns buttons of the same size
     private JButton createButton(String text, ActionListener actionListener){
         JButton button = new JButton(text);
         button.addActionListener(actionListener);
@@ -117,6 +119,7 @@ public class BeatBoxGui {
         return button;
     }
 
+    // updates the selectedInstruments based on the checked boxes in the gui, then returns the selectedInstruments
     public int[][] getSelectedInstruments(){
         return instrumentsBox.syncInstrumentsWithGui();
     }
