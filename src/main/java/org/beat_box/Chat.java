@@ -45,14 +45,20 @@ public class Chat {
         }
     }
 
+    public int[][] deepCopySelectedInstruments(int[][] selectedInstruments) {
+        int[][] copiedInstrument = new int[selectedInstruments.length][];
+        for (int i = 0; i < selectedInstruments.length; i++) {
+            copiedInstrument[i] = selectedInstruments[i].clone();
+        }
+
+        return copiedInstrument;
+    }
+
     public void sendMsg(int[][] selectedInstrument) {
         try{
 
             // deep copy so the obj will be correctly send
-            int[][] copiedInstrument = new int[selectedInstrument.length][];
-            for (int i = 0; i < selectedInstrument.length; i++) {
-                copiedInstrument[i] = selectedInstrument[i].clone();
-            }
+            int[][] copiedInstrument = deepCopySelectedInstruments(selectedInstrument);
 
             ChatMessage chatMessage = new ChatMessage(outgoingMsg.getText(), copiedInstrument);
 
@@ -111,14 +117,14 @@ public class Chat {
         // reference to the chatMessage that holds the beat pattern the button will load
         ChatMessage chatMessage;
 
-        public LoadPatternButtonListener(ChatMessage chatMessage) {
-            this.chatMessage = chatMessage;
+        public LoadPatternButtonListener(ChatMessage chatMsg) {
+            this.chatMessage = new ChatMessage(chatMsg.getMessage(), chatMsg.getSelectedInstruments());
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             // load the beat pattern into the GUI
-            beatBoxGui.setSelectedInstruments(chatMessage.getSelectedInstruments());
+            beatBoxGui.setSelectedInstruments(deepCopySelectedInstruments(chatMessage.getSelectedInstruments()));
         }
     }
 }
