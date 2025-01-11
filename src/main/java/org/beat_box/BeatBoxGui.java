@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 public class BeatBoxGui {
 
     private JFrame frame;
-    private JPanel mainPanel;
     private InstrumentsBox instrumentsBox;
     private JTextField outgoingMsg;
     private JPanel incomingMsgPanel;
@@ -34,12 +33,9 @@ public class BeatBoxGui {
         JPanel instrumentsPanel = createInstrumentPanel();
         frame.add(instrumentsPanel, BorderLayout.WEST);
 
-        // Main grid panel for checkboxes - CENTER
-        mainPanel = new JPanel(new GridLayout(16, 16, 2, 2));
-        for (JCheckBox checkBox : instrumentsBox.getCheckBoxesList()) {
-            mainPanel.add(checkBox);
-        }
-        frame.add(mainPanel, BorderLayout.CENTER);
+        // Beat panel for checkboxes - CENTER
+        JPanel beatPanel = createBeatPanel();
+        frame.add(beatPanel, BorderLayout.CENTER);
 
         // Button and Chat Panel - EAST
         JPanel rightPanel = new JPanel(new BorderLayout(10, 10));
@@ -53,8 +49,18 @@ public class BeatBoxGui {
         frame.setVisible(true);
     }
 
+    private JPanel createBeatPanel() {
+        JPanel beatPanel = new JPanel(new GridLayout(16, 16, 2, 2));
+        beatPanel.setBorder(BorderFactory.createTitledBorder("Beat"));
+        for (JCheckBox checkBox : instrumentsBox.getCheckBoxesList()) {
+            beatPanel.add(checkBox);
+        }
+
+        return beatPanel;
+    }
+
     private JPanel createInstrumentPanel() {
-        JPanel instrumentsPanel = new JPanel(new GridLayout(16, 2, 5, 5));
+        JPanel instrumentsPanel = new JPanel(new GridLayout(16, 1, 5, 5));
         instrumentsPanel.setBorder(BorderFactory.createTitledBorder("Instruments"));
 
         String[] instrumentNames = InstrumentsBox.INSTRUMENTS_NAME;
